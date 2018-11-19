@@ -27,18 +27,21 @@ def calcDist(data,x,y):
 	z=math.sqrt(z)
 	return z
 
-def makeGrid(data):
+def makeGrid(data,index):
 	siz=len(data)
 	grid=np.full((math.floor(math.sqrt(10*siz)),math.floor(math.sqrt(10*siz))),-1)
-	print(grid)
 	print(rd.randrange(0,22))
 	for i in range(siz):
 		while True:
 			if grid[rd.randrange(0,len(grid)-1)][rd.randrange(0,len(grid)-1)] == -1:
-				grid[rd.randrange(0,len(grid)-1)][rd.randrange(0,len(grid)-1)]=i
+				a=rd.randrange(0,len(grid)-1)
+				b=rd.randrange(0,len(grid)-1)
+				grid[a][b]=i
+				index.append((a,b))
 				break
 	print (grid)
 	return grid
+	
 
 def normalize(data):
 	lenx=len(data)
@@ -55,22 +58,45 @@ def normalize(data):
 	for i in range(lenx):
 		for j in range(leny):
 			z[i][j]=(data[i][j]-arrMin[j])/(arrMax[j]-arrMin[j])
-	print(z)
 	return z
 
-
+#def sortP()	
+	
+def ACC(data):
+	index=[]#indices que contem dados na matriz
+	z=normalize(data)
+	grid=makeGrid(z,index)
+	agents=np.empty(math.ceil(len(data)*0.1),np.int_)#array de formigas
+	
+	
+	temp=rd.sample(range(len(data)),math.ceil(len(data)*0.1))#gerando 3 numeros aleatorios correspondentes ao indice de dados(qtd)
+	for i in range(len(temp)):
+		agents[i]=temp[i]
+		
+	print(index)
+	print('\n')
+	for i in range(len(agents)):
+		print(agents[i])
+	print(agents)
+		
+	
+	
+	
+	
+	
 def main():
 	filename="Dados Para Agrupamento.xlsx"
 	a=abrirArquivo(filename,2,1,29,2,"str")
 	b=abrirArquivo(filename,2,3,29,6,"float")
 	arr=np.asarray(b, dtype=np.float32)
-	print(arr)
-	for i in range(len(a)):
-		print(a[i])
-	print(calcDist(arr,0,27))
-	makeGrid(arr)
-	z=normalize(arr)
-	grid=makeGrid(z)
+	#print(arr)
+	#for i in range(len(a)):
+	#	print(a[i])
+	#print(calcDist(arr,0,27))
+	#makeGrid(arr)
+	#z=normalize(arr)
+	#grid=makeGrid(z)
+	ACC(arr)
 
 
 
