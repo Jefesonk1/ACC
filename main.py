@@ -33,11 +33,11 @@ def makeGrid(data,index):
 	print(rd.randrange(0,22))
 	for i in range(siz):
 		while True:
-			if grid[rd.randrange(0,len(grid)-1)][rd.randrange(0,len(grid)-1)] == -1:
-				a=rd.randrange(0,len(grid)-1)
-				b=rd.randrange(0,len(grid)-1)
+			a=rd.randrange(0,len(grid)-1)
+			b=rd.randrange(0,len(grid)-1)
+			if grid[a][b] == -1:				
 				grid[a][b]=i
-				index.append((a,b))
+				index.append([a,b])
 				break
 	print (grid)
 	return grid
@@ -62,23 +62,37 @@ def normalize(data):
 
 #def sortP()	
 	
+def moverFormiga(formiga,maxIndex):
+	possibilidades=[-1,1]
+	x=possibilidades[rd.randrange(0,2)]
+	y=possibilidades[rd.randrange(0,2)]
+	formiga[0]+=x
+	formiga[1]+=y
+	formiga=np.mod(formiga, (maxIndex+1,maxIndex+1))
+	return formiga
+
+
+def densidade():
+	pass
+
 def ACC(data):
 	index=[]#indices que contem dados na matriz
 	z=normalize(data)
 	grid=makeGrid(z,index)
 	agents=np.empty(math.ceil(len(data)*0.1),np.int_)#array de formigas
 	
-	
 	temp=rd.sample(range(len(data)),math.ceil(len(data)*0.1))#gerando 3 numeros aleatorios correspondentes ao indice de dados(qtd)
 	for i in range(len(temp)):
 		agents[i]=temp[i]
-		
-	print(index)
-	print('\n')
-	for i in range(len(agents)):
-		print(agents[i])
+
 	print(agents)
-		
+	#for i in range(len(agents)):
+	print(index)
+	print (index[agents[0]])
+	moverFormiga(index[agents[0]],len(grid)-1)
+	print (index[agents[0]])
+	print(agents)
+	print(index)
 	
 	
 	
@@ -97,7 +111,7 @@ def main():
 	#z=normalize(arr)
 	#grid=makeGrid(z)
 	ACC(arr)
-
+	
 
 
 
