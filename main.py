@@ -2,22 +2,17 @@ import numpy as np
 import openpyxl
 import math
 import random as rd
-def abrirArquivo(filename,min_r,min_c,max_r,max_c,data_type):
+def abrirArquivo(filename,min_r,min_c,max_r,max_c):
 	book=openpyxl.load_workbook(filename)
 	sheet=book.active
-	data2=[]
-	row_count=0
-	col_count=0
+	data=[]
 	temp=[]
 	for row in sheet.iter_rows(min_row=min_r, min_col=min_c, max_row=max_r, max_col=max_c):
 		for cell in row:	
 			temp.append(cell.value)
-			col_count+=1
-		col_count=0
-		row_count+=1
-		data2.append(temp.copy())
+		data.append(temp.copy())
 		temp.clear()
-	return data2
+	return data
 
 def calcDist(data,x,y):
 	max_c=len(data[0])
@@ -39,7 +34,6 @@ def makeGrid(data,index):
 				grid[a][b]=i
 				index.append([a,b])
 				break
-	print (grid)
 	return grid
 	
 
@@ -62,54 +56,58 @@ def normalize(data):
 
 #def sortP()	
 	
-def moverFormiga(formiga,maxIndex):
-	possibilidades=[-1,1]
+def moverFormiga(formiga,grid,agents,index):
+	possibilidades=[-1,1]	
 	x=possibilidades[rd.randrange(0,2)]
 	y=possibilidades[rd.randrange(0,2)]
-	formiga[0]+=x
-	formiga[1]+=y
-	formiga=np.mod(formiga, (maxIndex+1,maxIndex+1))
+	temp=grid[formiga[0],formiga[1]]
+	oldPos=formiga.copy()
+	newPos=formiga.copy()
+	newPos[0]+=x
+	newPos[1]+=y
+	newPos=np.mod(newPos, (len(grid),len(grid)))
+	'''print('teste')
+	print(agents)
+	print(oldPos)
+	print(newPos)
+	print("teste")
+	print(formiga)
+	print(newPos)'''	
+	if grid[newPos[0],newPos[1]]==-1:
+		formiga=newPos
+		grid[formiga[0],formiga[1]]=temp
+		grid[oldPos[0],oldPos[1]]=-1
+		index[agents]=[newPos[0],newPos[1]]
+		print(grid)
+		return formiga
+	else:
+		moverFormiga(formiga,grid,agents,index)
 	return formiga
 
 
 def densidade():
 	pass
 
+
 def ACC(data):
 	index=[]#indices que contem dados na matriz
 	z=normalize(data)
 	grid=makeGrid(z,index)
-	agents=np.empty(math.ceil(len(data)*0.1),np.int_)#array de formigas
-	
-	temp=rd.sample(range(len(data)),math.ceil(len(data)*0.1))#gerando 3 numeros aleatorios correspondentes ao indice de dados(qtd)
-	for i in range(len(temp)):
-		agents[i]=temp[i]
-
+	agents=rd.randrange(0,len(index))
 	print(agents)
-	#for i in range(len(agents)):
+	print(grid)
+	print('\n')
 	print(index)
-	print (index[agents[0]])
-	moverFormiga(index[agents[0]],len(grid)-1)
-	print (index[agents[0]])
-	print(agents)
+	print('\n')
+	moverFormiga(index[agents],grid,agents,index)
+	print('\n')
 	print(index)
-	
-	
-	
-	
 	
 def main():
 	filename="Dados Para Agrupamento.xlsx"
-	a=abrirArquivo(filename,2,1,29,2,"str")
-	b=abrirArquivo(filename,2,3,29,6,"float")
+	a=abrirArquivo(filename,2,1,29,2)
+	b=abrirArquivo(filename,2,3,29,6)
 	arr=np.asarray(b, dtype=np.float32)
-	#print(arr)
-	#for i in range(len(a)):
-	#	print(a[i])
-	#print(calcDist(arr,0,27))
-	#makeGrid(arr)
-	#z=normalize(arr)
-	#grid=makeGrid(z)
 	ACC(arr)
 	
 
